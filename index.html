@@ -76,52 +76,148 @@
     font-weight: 700; color: #1a1a2e; white-space: nowrap;
     font-size: 0.74rem; padding-right: 8px;
   }
+  .rb-callout {
+    background: #f0f4ff; border-left: 4px solid #1a1a2e;
+    padding: 10px 14px; border-radius: 0 6px 6px 0;
+    font-size: 0.8rem; line-height: 1.6; color: #1a1a2e;
+  }
+  .combo-table { border-collapse: collapse; width: 100%; font-size: 0.76rem; margin-top:6px; }
+  .combo-table thead tr th {
+    background: #1a1a2e; color: #fff; padding: 7px 10px;
+    text-align: left; font-weight: 600; font-size: 0.75rem;
+  }
+  .combo-table tbody tr td { padding: 6px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .combo-table tbody tr:nth-child(even) td { background: #fafafa; }
+  .combo-table tbody tr:last-child td { border-bottom: none; }
 </style>
 </head>
 <body>
 <h1>RSI Slope Scanner — Results</h1>
-<p class="sub">208 symbols scanned &nbsp;·&nbsp; 41 Strong Buy &nbsp;·&nbsp; 21 Strong Sell &nbsp;·&nbsp; 17 May 2026 &nbsp;|&nbsp; Updated: 17 May 2026  02:45 IST</p>
+<p class="sub">208 symbols scanned &nbsp;·&nbsp; 41 Strong Buy &nbsp;·&nbsp; 21 Strong Sell &nbsp;·&nbsp; 17 May 2026 &nbsp;|&nbsp; Updated: 17 May 2026  02:59 IST</p>
 
 <!-- ── RULES PANEL ─────────────────────────────────────── -->
 <details class="rules-panel" open>
-  <summary>📖 How to read this page — click to collapse</summary>
-  <div class="rules-grid">
+  <summary>📖 Rule Book — How to read &amp; act on this page &nbsp;·&nbsp; click to collapse</summary>
+  <div style="margin-top:14px">
 
-    <div class="rules-section">
-      <div class="rules-heading">📊 Score_v2 — Directional Signal</div>
-      <table class="rules-table">
-        <tr><td class="tag" style="background:#1a7a3e;color:#fff">Strong Buy ≥ 8</td><td>All trend + momentum + volume indicators aligned bullish</td></tr>
-        <tr><td class="tag" style="background:#276221;color:#fff">Buy ≥ 6</td>      <td>Mostly bullish — uptrend, RSI 50–75, MACD positive</td></tr>
-        <tr><td class="tag" style="background:#7a6200;color:#fff">Hold ≥ 4</td>     <td>Mixed signals — no clear direction, wait for confirmation</td></tr>
-        <tr><td class="tag" style="background:#7a1f00;color:#fff">Sell ≥ 2</td>     <td>Mostly bearish — downtrend, weak momentum</td></tr>
-        <tr><td class="tag" style="background:#5c0000;color:#fff">Strong Sell &lt; 2</td><td>All indicators bearish — strong downtrend</td></tr>
-      </table>
+    <!-- SECTION 1: Two systems explained -->
+    <div class="rb-callout">
+      ⚠️ <strong>This page runs two independent scoring systems.</strong>
+      <strong>Score_v2</strong> tells you where the stock price is headed (trend direction).
+      <strong>MustSignal</strong> tells you whether it is safe to sell options on that stock (range-bound check).
+      They answer different questions — both columns must be read together.
     </div>
 
-    <div class="rules-section">
-      <div class="rules-heading">🎯 MustSignal — Option Selling (1% target)</div>
-      <table class="rules-table">
-        <tr><td class="tag" style="background:#1a7a3e;color:#fff">Sell CE</td><td>Mild bullish exhaustion + range-bound → sell Call option. ADX&lt;20, RSI 55–65, MACD fading</td></tr>
-        <tr><td class="tag" style="background:#c0392b;color:#fff">Sell PE</td><td>Mild bearish exhaustion + range-bound → sell Put option. ADX&lt;20, RSI 35–45, MACD recovering</td></tr>
-        <tr><td class="tag" style="background:#7a6200;color:#fff">Neutral Range</td><td>Stock range-bound but no clear bias → sell Straddle (both CE+PE)</td></tr>
-        <tr><td class="tag" style="background:#5c0000;color:#fff">Avoid</td><td>Strong trend or high volatility → dangerous for sellers. Skip.</td></tr>
-      </table>
-    </div>
+    <!-- SECTION 2: Combination rule book -->
+    <div class="rules-heading" style="margin-top:14px">📋 Combined Rule Book — What to do for each combination</div>
+    <table class="rules-table combo-table">
+      <thead>
+        <tr>
+          <th>Score_v2</th><th>MustSignal</th><th>What it means</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Strong Buy</span></td>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Sell CE</span></td>
+          <td>Stock in uptrend but momentum fading — RSI 55–65, MACD crossing down, ADX still low</td>
+          <td>✅ <strong>Best setup.</strong> Sell slightly OTM Call. Stock has mild bullish bias but won&apos;t run hard — premium decays safely.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Strong Buy</span></td>
+          <td><span class="tag" style="background:#5c0000;color:#fff">Avoid</span></td>
+          <td>Stock trending hard upward — ADX&gt;30, strong MACD, RSI elevated</td>
+          <td>🚫 <strong>Do not sell options.</strong> Stock can blow past your strike. Watch as a directional buy instead.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Strong Buy</span></td>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Neutral Range</span></td>
+          <td>Uptrend on longer timeframe but short-term completely flat</td>
+          <td>⚠️ Sell slightly OTM Call or Straddle cautiously. Keep stop tight.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#276221;color:#fff">Buy</span></td>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Sell CE</span></td>
+          <td>Mostly bullish but losing steam — good range candidate</td>
+          <td>✅ Sell OTM Call. Comfortable setup for 1% premium target.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Hold</span></td>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Neutral Range</span></td>
+          <td>Stock completely directionless — no trend, no momentum</td>
+          <td>✅ <strong>Ideal for Straddle.</strong> Sell both CE and PE. Stock stuck in range — collect premium from both sides.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Hold</span></td>
+          <td><span class="tag" style="background:#1a7a3e;color:#fff">Sell CE</span></td>
+          <td>Neutral trend, mild upside bias fading</td>
+          <td>✅ Sell OTM Call. Low risk — stock unlikely to break out.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Hold</span></td>
+          <td><span class="tag" style="background:#c0392b;color:#fff">Sell PE</span></td>
+          <td>Neutral trend, mild downside bias recovering</td>
+          <td>✅ Sell OTM Put. Low risk — stock unlikely to break down.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#7a1f00;color:#fff">Sell</span></td>
+          <td><span class="tag" style="background:#c0392b;color:#fff">Sell PE</span></td>
+          <td>Mostly bearish but losing downward steam — RSI 35–45, MACD recovering</td>
+          <td>✅ Sell OTM Put. Downtrend exhausting — put premium decays as selling pressure fades.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#5c0000;color:#fff">Strong Sell</span></td>
+          <td><span class="tag" style="background:#c0392b;color:#fff">Sell PE</span></td>
+          <td>Strong downtrend but short-term oversold bounce possible</td>
+          <td>⚠️ Risky. Only if RSI &lt; 35 and OBV flat. Keep position small, exit fast.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#5c0000;color:#fff">Strong Sell</span></td>
+          <td><span class="tag" style="background:#5c0000;color:#fff">Avoid</span></td>
+          <td>Hard downtrend — ADX high, strong momentum, volatile</td>
+          <td>🚫 <strong>Do not sell options.</strong> Stock can gap down past strike. Skip entirely.</td>
+        </tr>
+        <tr>
+          <td><span class="tag" style="background:#7a6200;color:#fff">Any</span></td>
+          <td><span class="tag" style="background:#5c0000;color:#fff">Avoid</span></td>
+          <td>High ATR (&gt;2.5%), strong MACD gap, or extreme RSI regardless of trend</td>
+          <td>🚫 <strong>Skip.</strong> Volatility too high for safe option selling at 1% target.</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div class="rules-section">
-      <div class="rules-heading">📐 Key Indicators used</div>
-      <table class="rules-table">
-        <tr><td class="ind">ADX</td>      <td>&lt;20 = range-bound (ideal for selling) · &gt;30 = trending (avoid)</td></tr>
-        <tr><td class="ind">RSI</td>      <td>40–60 = neutral · &gt;70 = overbought · &lt;30 = oversold</td></tr>
-        <tr><td class="ind">ATR%</td>     <td>&lt;1.2% of price = low vol (fast decay) · &gt;2.5% = risky</td></tr>
-        <tr><td class="ind">MACD</td>     <td>Above signal = bullish · below = bearish · gap = momentum strength</td></tr>
-        <tr><td class="ind">MFI</td>      <td>40–60 = neutral flow · &gt;60 = buying pressure · &lt;40 = selling</td></tr>
-        <tr><td class="ind">OBV Slope</td><td>Flat = no conviction (good for sellers) · rising/falling = directional</td></tr>
-        <tr><td class="ind">BB Mid</td>   <td>Price near midline = mean-reverting range (ideal for selling)</td></tr>
-        <tr><td class="ind">OptionSell Score</td><td>0–10 composite. ≥6 = good candidate · &lt;4 = avoid</td></tr>
-      </table>
-    </div>
+    <!-- SECTION 3: two-column indicator + scoring reference -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px">
 
+      <div>
+        <div class="rules-heading">📐 Indicator Reference</div>
+        <table class="rules-table">
+          <tr><td class="ind">ADX</td>      <td>&lt;20 = range (sell options) · 20–30 = mild trend · &gt;30 = trending (avoid)</td></tr>
+          <tr><td class="ind">RSI</td>      <td>30–40 = oversold bounce · 40–60 = neutral · 60–70 = bullish · &gt;70 = overbought</td></tr>
+          <tr><td class="ind">ATR %</td>    <td>&lt;1.2% = low vol, fast decay ✅ · 1.2–2.5% = moderate · &gt;2.5% = risky 🚫</td></tr>
+          <tr><td class="ind">MACD</td>     <td>Above signal line = bullish · below = bearish · gap size = momentum strength</td></tr>
+          <tr><td class="ind">MFI</td>      <td>40–60 = neutral ✅ · &gt;60 = buying pressure · &lt;40 = selling pressure</td></tr>
+          <tr><td class="ind">OBV Slope</td><td>Near zero = no conviction ✅ · Rising = accumulation · Falling = distribution</td></tr>
+          <tr><td class="ind">BB Mid</td>   <td>Price near midline = range-bound ✅ · Near bands = breakout risk</td></tr>
+          <tr><td class="ind">SMA 50/200</td><td>50 &gt; 200 = uptrend · 50 &lt; 200 = downtrend (Golden/Death Cross)</td></tr>
+        </table>
+      </div>
+
+      <div>
+        <div class="rules-heading">🎯 Score Thresholds</div>
+        <table class="rules-table">
+          <tr><td class="ind">Score_v2 ≥ 8</td>  <td><span class="tag" style="background:#1a7a3e;color:#fff">Strong Buy</span> — all indicators bullish, high conviction</td></tr>
+          <tr><td class="ind">Score_v2 ≥ 6</td>  <td><span class="tag" style="background:#276221;color:#fff">Buy</span> — mostly bullish, some confirmation missing</td></tr>
+          <tr><td class="ind">Score_v2 ≥ 4</td>  <td><span class="tag" style="background:#7a6200;color:#fff">Hold</span> — mixed, wait or sell straddle</td></tr>
+          <tr><td class="ind">Score_v2 ≥ 2</td>  <td><span class="tag" style="background:#7a1f00;color:#fff">Sell</span> — mostly bearish</td></tr>
+          <tr><td class="ind">Score_v2 &lt; 2</td><td><span class="tag" style="background:#5c0000;color:#fff">Strong Sell</span> — all indicators bearish</td></tr>
+          <tr style="border-top:2px solid #eee"><td class="ind">OptionSell ≥ 7</td><td>Premium seller&apos;s ideal — very range-bound, low vol</td></tr>
+          <tr><td class="ind">OptionSell ≥ 5</td><td>Good candidate — acceptable range conditions</td></tr>
+          <tr><td class="ind">OptionSell &lt; 4</td><td>Avoid selling — too directional or too volatile</td></tr>
+        </table>
+      </div>
+
+    </div>
   </div>
 </details>
 <!-- ──────────────────────────────────────────────────────── -->
