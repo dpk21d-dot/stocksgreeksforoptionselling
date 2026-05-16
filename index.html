@@ -8,23 +8,60 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f4f6f9; color: #1a1a2e; padding: 24px; }
   h1   { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
-  .sub { font-size: 0.85rem; color: #666; margin-bottom: 20px; }
+  .sub { font-size: 0.85rem; color: #666; margin-bottom: 16px; }
+  .controls { display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; align-items:center; }
+  .controls button {
+    padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer;
+    font-size: 0.8rem; font-weight: 600; background: #1a1a2e; color: #fff;
+  }
+  .controls button:hover { background: #2e2e5e; }
+  .controls button.active { background: #1a7a3e; }
+  #match-count { font-size:0.8rem; color:#555; }
   .wrap { overflow-x: auto; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-  table { border-collapse: collapse; width: 100%; background: #fff; font-size: 0.82rem; }
-  th    { background: #1a1a2e; color: #fff; padding: 10px 12px; text-align: center;
-           font-weight: 600; white-space: nowrap; position: sticky; top: 0; }
-  td    { padding: 8px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
-  tr:hover td { background: #f0f4ff; }
+  table { border-collapse: collapse; width: 100%; background: #fff; font-size: 0.8rem; }
+  thead tr:first-child th {
+    background: #1a1a2e; color: #fff; padding: 10px 12px;
+    text-align: center; font-weight: 600; white-space: nowrap;
+    position: sticky; top: 0; z-index: 2; cursor: pointer; user-select: none;
+  }
+  thead tr:first-child th:hover { background: #2e2e5e; }
+  .sort-icon { font-size: 0.65rem; opacity: 0.6; }
+  thead tr:last-child th {
+    background: #f0f0f8; padding: 4px 6px;
+    position: sticky; top: 37px; z-index: 2;
+  }
+  thead tr:last-child th input {
+    width: 100%; padding: 4px 6px; border: 1px solid #ccc;
+    border-radius: 4px; font-size: 0.75rem; outline: none;
+  }
+  thead tr:last-child th input:focus { border-color: #1a1a2e; }
+  td    { padding: 7px 12px; border-bottom: 1px solid #eee; white-space: nowrap; }
+  tr:hover td { background: #f0f4ff !important; }
   tr:last-child td { border-bottom: none; }
+  .hidden { display: none; }
   .footer { margin-top: 14px; font-size: 0.75rem; color: #999; text-align: right; }
 </style>
 </head>
 <body>
 <h1>RSI Slope Scanner — Results</h1>
-<p class="sub">208 symbols scanned &nbsp;·&nbsp; 41 Strong Buy &nbsp;·&nbsp; 21 Strong Sell &nbsp;·&nbsp; 17 May 2026 &nbsp;|&nbsp; Updated: 17 May 2026  02:07 IST</p>
+<p class="sub">208 symbols scanned &nbsp;·&nbsp; 41 Strong Buy &nbsp;·&nbsp; 21 Strong Sell &nbsp;·&nbsp; 17 May 2026 &nbsp;|&nbsp; Updated: 17 May 2026  02:16 IST</p>
+
+<div class="controls">
+  <button onclick="quickFilter('FinalRecommendation_v2','Strong Buy')" class="active">⬆ Strong Buy</button>
+  <button onclick="quickFilter('FinalRecommendation_v2','Buy')">Buy</button>
+  <button onclick="quickFilter('FinalRecommendation_v2','Hold')">Hold</button>
+  <button onclick="quickFilter('FinalRecommendation_v2','Sell')">Sell</button>
+  <button onclick="quickFilter('FinalRecommendation_v2','Strong Sell')">⬇ Strong Sell</button>
+  <button onclick="clearAllFilters()" style="background:#888">✕ Clear</button>
+  <span id="match-count"></span>
+</div>
+
 <div class="wrap">
-<table>
-<thead><tr><th>Symbol</th><th>Status</th><th>Latest RSI</th><th>Close</th><th>Slope_14</th><th>Signal_14</th><th>Slope_21</th><th>Signal_21</th><th>Slope_30</th><th>Signal_30</th><th>YF_Close</th><th>Score</th><th>Recommendation</th><th>SMA_50</th><th>SMA_200</th><th>EMA_50</th><th>EMA_20</th><th>RSI_YF</th><th>bb_high</th><th>bb_low</th><th>adx</th><th>OBV</th><th>MFI</th><th>ATR</th><th>Vol_SMA20</th><th>MACD</th><th>MACD_Signal</th><th>StochRSI</th><th>OBV_slope_20</th><th>Score_v2</th><th>FinalRecommendation_v2</th><th>SuggestedStop</th></tr></thead>
+<table id="mainTable">
+<thead>
+  <tr><th onclick="sortTable(0)" title="Click to sort">Symbol <span class='sort-icon'>⇅</span></th><th onclick="sortTable(1)" title="Click to sort">Status <span class='sort-icon'>⇅</span></th><th onclick="sortTable(2)" title="Click to sort">Latest RSI <span class='sort-icon'>⇅</span></th><th onclick="sortTable(3)" title="Click to sort">Close <span class='sort-icon'>⇅</span></th><th onclick="sortTable(4)" title="Click to sort">Slope_14 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(5)" title="Click to sort">Signal_14 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(6)" title="Click to sort">Slope_21 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(7)" title="Click to sort">Signal_21 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(8)" title="Click to sort">Slope_30 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(9)" title="Click to sort">Signal_30 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(10)" title="Click to sort">YF_Close <span class='sort-icon'>⇅</span></th><th onclick="sortTable(11)" title="Click to sort">Score <span class='sort-icon'>⇅</span></th><th onclick="sortTable(12)" title="Click to sort">Recommendation <span class='sort-icon'>⇅</span></th><th onclick="sortTable(13)" title="Click to sort">SMA_50 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(14)" title="Click to sort">SMA_200 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(15)" title="Click to sort">EMA_50 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(16)" title="Click to sort">EMA_20 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(17)" title="Click to sort">RSI_YF <span class='sort-icon'>⇅</span></th><th onclick="sortTable(18)" title="Click to sort">bb_high <span class='sort-icon'>⇅</span></th><th onclick="sortTable(19)" title="Click to sort">bb_low <span class='sort-icon'>⇅</span></th><th onclick="sortTable(20)" title="Click to sort">adx <span class='sort-icon'>⇅</span></th><th onclick="sortTable(21)" title="Click to sort">OBV <span class='sort-icon'>⇅</span></th><th onclick="sortTable(22)" title="Click to sort">MFI <span class='sort-icon'>⇅</span></th><th onclick="sortTable(23)" title="Click to sort">ATR <span class='sort-icon'>⇅</span></th><th onclick="sortTable(24)" title="Click to sort">Vol_SMA20 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(25)" title="Click to sort">MACD <span class='sort-icon'>⇅</span></th><th onclick="sortTable(26)" title="Click to sort">MACD_Signal <span class='sort-icon'>⇅</span></th><th onclick="sortTable(27)" title="Click to sort">StochRSI <span class='sort-icon'>⇅</span></th><th onclick="sortTable(28)" title="Click to sort">OBV_slope_20 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(29)" title="Click to sort">Score_v2 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(30)" title="Click to sort">FinalRecommendation_v2 <span class='sort-icon'>⇅</span></th><th onclick="sortTable(31)" title="Click to sort">SuggestedStop <span class='sort-icon'>⇅</span></th></tr>
+  <tr class="filter-row"><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='0' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='1' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='2' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='3' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='4' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='5' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='6' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='7' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='8' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='9' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='10' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='11' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='12' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='13' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='14' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='15' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='16' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='17' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='18' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='19' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='20' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='21' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='22' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='23' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='24' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='25' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='26' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='27' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='28' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='29' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='30' /></th><th><input type='text' placeholder='Filter...' oninput='filterTable()' data-col='31' /></th></tr>
+</thead>
 <tbody>
 <tr><td >ABCAPITAL</td><td >OK</td><td >56.95</td><td >357.15</td><td >-0.28</td><td style="color:#888;text-align:center">Neutral</td><td >-0.11</td><td style="color:#888;text-align:center">Neutral</td><td >0.29</td><td style="color:#1a7a3e;font-weight:600;text-align:center">Buy</td><td >357.15</td><td >5.00</td><td >Buy</td><td >332.33</td><td >323.26</td><td >341.18</td><td >348.33</td><td >56.97</td><td >368.09</td><td >331.98</td><td >16.91</td><td >225569062.00</td><td >74.24</td><td >11.70</td><td >5054963.40</td><td >5.44</td><td >6.43</td><td >0.45</td><td >1611710.25</td><td >7.75</td><td style="background:#e8f5e9;color:#276221;font-weight:600;text-align:center">Buy</td><td >339.61</td></tr>
 <tr><td >ADANIENSOL</td><td >OK</td><td >53.23</td><td >1303.60</td><td >-2.49</td><td style="color:#888;text-align:center">Neutral</td><td >-1.46</td><td style="color:#888;text-align:center">Neutral</td><td >0.10</td><td style="color:#1a7a3e;font-weight:600;text-align:center">Buy</td><td >1303.60</td><td >5.00</td><td >Buy</td><td >1151.74</td><td >980.28</td><td >1202.50</td><td >1309.56</td><td >53.19</td><td >1468.81</td><td >1239.10</td><td >23.99</td><td >63764467.00</td><td >38.37</td><td >65.45</td><td >4273468.25</td><td >47.20</td><td >69.80</td><td >0.05</td><td >-78576.05</td><td >6.75</td><td style="background:#e8f5e9;color:#276221;font-weight:600;text-align:center">Buy</td><td >1205.43</td></tr>
@@ -239,5 +276,69 @@
 </table>
 </div>
 <p class="footer">Auto-generated by rsi_slope_merged_final_v2.py</p>
+
+<script>
+  // ── column index map ──────────────────────────────────────
+  const headers = Array.from(document.querySelectorAll('#mainTable thead tr:first-child th')).map(th => th.textContent.replace('⇅','').trim());
+  const colIndex = name => headers.indexOf(name);
+
+  // ── filter all rows by all active filter inputs ──────────
+  function filterTable() {
+    const inputs  = document.querySelectorAll('.filter-row input');
+    const rows    = document.querySelectorAll('#mainTable tbody tr');
+    let visible   = 0;
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      let show = true;
+      inputs.forEach(inp => {
+        const val = inp.value.trim().toLowerCase();
+        if (!val) return;
+        const ci  = parseInt(inp.dataset.col);
+        if (!cells[ci] || !cells[ci].textContent.toLowerCase().includes(val)) show = false;
+      });
+      row.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    document.getElementById('match-count').textContent = `${visible} rows shown`;
+  }
+
+  // ── quick-filter button sets the relevant column input ───
+  function quickFilter(colName, value) {
+    clearAllFilters();
+    const ci  = colIndex(colName);
+    const inp = document.querySelector(`.filter-row input[data-col='${ci}']`);
+    if (inp) { inp.value = value; filterTable(); }
+    document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // ── clear all filters ────────────────────────────────────
+  function clearAllFilters() {
+    document.querySelectorAll('.filter-row input').forEach(i => i.value = '');
+    document.querySelectorAll('#mainTable tbody tr').forEach(r => r.classList.remove('hidden'));
+    document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+    document.getElementById('match-count').textContent = '';
+  }
+
+  // ── column sort ──────────────────────────────────────────
+  let sortDir = {};
+  function sortTable(ci) {
+    const tbody = document.querySelector('#mainTable tbody');
+    const rows  = Array.from(tbody.querySelectorAll('tr'));
+    const asc   = !sortDir[ci];
+    sortDir     = {[ci]: asc};
+    rows.sort((a, b) => {
+      const av = a.querySelectorAll('td')[ci]?.textContent.trim() || '';
+      const bv = b.querySelectorAll('td')[ci]?.textContent.trim() || '';
+      const an = parseFloat(av), bn = parseFloat(bv);
+      if (!isNaN(an) && !isNaN(bn)) return asc ? an - bn : bn - an;
+      return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+    });
+    rows.forEach(r => tbody.appendChild(r));
+  }
+
+  // init count
+  document.getElementById('match-count').textContent = `${document.querySelectorAll('#mainTable tbody tr').length} rows shown`;
+</script>
 </body>
 </html>
