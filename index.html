@@ -93,7 +93,7 @@
 </head>
 <body>
 <h1>RSI Slope Scanner — Results</h1>
-<p class="sub">208 symbols scanned &nbsp;·&nbsp; 35 Strong Buy &nbsp;·&nbsp; 16 Strong Sell &nbsp;·&nbsp; Sell CE: 25 &nbsp;·&nbsp; Sell PE: 30 &nbsp;·&nbsp; Straddle: 80&nbsp;·&nbsp; VIX 17.9 &nbsp;·&nbsp; 24 May 2026 &nbsp;|&nbsp; Updated: 24 May 2026  22:01 IST</p>
+<p class="sub">208 symbols scanned &nbsp;·&nbsp; 35 Strong Buy &nbsp;·&nbsp; 16 Strong Sell &nbsp;·&nbsp; Sell CE: 25 &nbsp;·&nbsp; Sell PE: 30 &nbsp;·&nbsp; Straddle: 80&nbsp;·&nbsp; VIX 17.9 &nbsp;·&nbsp; 24 May 2026 &nbsp;|&nbsp; Updated: 24 May 2026  22:19 IST</p>
 
 <!-- ── RULES PANEL ─────────────────────────────────────── -->
 <details class="rules-panel" open>
@@ -223,6 +223,7 @@
 <!-- ──────────────────────────────────────────────────────── -->
 
 <div class="controls">
+  <span style="font-size:0.78rem;color:#aaa;font-weight:600;margin-right:4px">Direction →</span>
   <button onclick="quickFilter('FinalRecommendation_v2','Strong Buy')" class="active">⬆ Strong Buy</button>
   <button onclick="quickFilter('FinalRecommendation_v2','Buy')">Buy</button>
   <button onclick="quickFilter('FinalRecommendation_v2','Hold')">Hold</button>
@@ -232,12 +233,36 @@
   <span id="match-count"></span>
 </div>
 
-<div class="controls" style="margin-top:-6px;margin-bottom:14px;">
-  <span style="font-size:0.78rem;color:#555;font-weight:600">Option Sell →</span>
+<div class="controls" style="margin-top:-6px;margin-bottom:6px;">
+  <span style="font-size:0.78rem;color:#aaa;font-weight:600;margin-right:4px">Option Sell →</span>
   <button onclick="quickFilter('MustSignal','Sell CE')"  style="background:#1a7a3e">📞 Sell CE</button>
   <button onclick="quickFilter('MustSignal','Sell PE')"  style="background:#c0392b">📞 Sell PE</button>
   <button onclick="quickFilter('MustSignal','Neutral Range')" style="background:#7a6200">↔ Neutral Range</button>
   <button onclick="quickFilter('MustSignal','Avoid')"    style="background:#5c0000">⚠ Avoid</button>
+</div>
+
+<div class="controls" style="margin-top:-6px;margin-bottom:14px;">
+  <span style="font-size:0.78rem;color:#555;font-weight:700;margin-right:4px">🎯 Trade Setups →</span>
+  <button onclick="tradeFilter('sell_ce')"
+          style="background:#1a7a3e;font-size:0.82rem;padding:7px 16px"
+          title="Buy/Hold + Sell CE + ADX&lt;25 + RSI 52-72 + VIX=Sell + Decay≥4">
+    ✅ Best Sell CE
+  </button>
+  <button onclick="tradeFilter('sell_pe')"
+          style="background:#c0392b;font-size:0.82rem;padding:7px 16px"
+          title="Sell/Hold + Sell PE + ADX&lt;25 + RSI 28-48 + VIX=Sell + Decay≥4">
+    ✅ Best Sell PE
+  </button>
+  <button onclick="tradeFilter('straddle')"
+          style="background:#7a6200;font-size:0.82rem;padding:7px 16px"
+          title="Hold + Neutral Range + ADX&lt;20 + RSI 42-58 + VIX=Sell + Decay≥5">
+    ✅ Best Straddle
+  </button>
+  <button onclick="tradeFilter('avoid')"
+          style="background:#5c0000;font-size:0.82rem;padding:7px 16px"
+          title="MustSignal=Avoid OR ADX≥30 OR ATR_Pct≥2.5">
+    🚫 Avoid
+  </button>
 </div>
 
 <div class="wrap">
@@ -486,7 +511,87 @@
     document.getElementById('match-count').textContent = `${visible} rows shown`;
   }
 
-  // ── quick-filter button sets the relevant column input ───
+  // ── trade setup filter (multi-column, exact match to CSV files) ─
+  function tradeFilter(setup) {
+    clearAllFilters();
+    document.querySelectorAll('.controls button').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const rows = document.querySelectorAll('#mainTable tbody tr');
+    const ci   = colIndex;
+
+    // column indices
+    const iRec    = ci('FinalRecommendation_v2');
+    const iMust   = ci('MustSignal');
+    const iOpt    = ci('OptionSell_Score');
+    const iDecay  = ci('Decay_Score');
+    const iAdx    = ci('adx');
+    const iRsi    = ci('RSI_YF');
+    const iVix    = ci('VIX_Signal');
+    const iAtr    = ci('ATR_Pct');
+
+    function cell(row, idx) {
+      const td = row.querySelectorAll('td')[idx];
+      return td ? td.textContent.trim() : '';
+    }
+    function num(row, idx) {
+      return parseFloat(cell(row, idx)) || 0;
+    }
+
+    let visible = 0;
+    rows.forEach(row => {
+      const rec   = cell(row, iRec);
+      const must  = cell(row, iMust);
+      const opt   = num(row, iOpt);
+      const decay = num(row, iDecay);
+      const adx   = num(row, iAdx);
+      const rsi   = num(row, iRsi);
+      const vix   = cell(row, iVix);
+      const atr   = num(row, iAtr);
+
+      const vixOk   = vix !== 'Avoid';
+      const atrOk   = atr < 2.5;
+
+      let show = false;
+
+      if (setup === 'sell_ce') {
+        show = ['Strong Buy','Buy','Hold'].includes(rec)
+            && must === 'Sell CE'
+            && opt  >= 5
+            && decay >= 4
+            && adx  < 25
+            && rsi  >= 52 && rsi <= 72
+            && vixOk && atrOk;
+      } else if (setup === 'sell_pe') {
+        show = ['Strong Sell','Sell','Hold'].includes(rec)
+            && must === 'Sell PE'
+            && opt  >= 5
+            && decay >= 4
+            && adx  < 25
+            && rsi  >= 28 && rsi <= 48
+            && vixOk && atrOk;
+      } else if (setup === 'straddle') {
+        show = ['Hold','Buy','Sell'].includes(rec)
+            && must === 'Neutral Range'
+            && opt  >= 6
+            && decay >= 5
+            && adx  < 20
+            && rsi  >= 42 && rsi <= 58
+            && vixOk && atrOk;
+      } else if (setup === 'avoid') {
+        show = must === 'Avoid'
+            || adx >= 30
+            || atr >= 2.5
+            || vix === 'Avoid';
+      }
+
+      row.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    document.getElementById('match-count').textContent = `${visible} rows shown`;
+  }
+
+  // ── single column quick filter ────────────────────────────
   function quickFilter(colName, value) {
     clearAllFilters();
     const ci  = colIndex(colName);
